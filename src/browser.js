@@ -2,8 +2,10 @@ require('webcrypto-shim');
 var b64u = require('b64u-lite/bundle/b64u-lite');
 var str2buf = require('str2buf');
 
+var ctx = (typeof window === 'undefined') ? self : window;
+
 var isEdge = navigator.userAgent.indexOf('Edge') > -1;
-var isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
+var isIE11 = !!ctx.MSInputMethodContext && !!document.documentMode;
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign#Polyfill
 function assign(target) {
@@ -65,7 +67,7 @@ if (isEdge || isIE11) {
     if (algo.name === 'RSASSA-PKCS1-v1_5' && algo.hash.name === 'SHA-256') {
       delete jwk.qi;
     }
-    
+
     return originalImportKey.apply(crypto.subtle, args)
     .then(function(res) {
       var algo = res.algorithm;
@@ -78,4 +80,4 @@ if (isEdge || isIE11) {
   };
 }
 
-module.exports = window.crypto;
+module.exports = ctx.crypto;

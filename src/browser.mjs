@@ -1,2 +1,4 @@
 import './webcrypto-shim.mjs'
-export default window.crypto
+
+const ctx = (typeof window === "undefined") ? self : window
+export default ctx.crypto
